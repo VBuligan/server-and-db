@@ -1,4 +1,4 @@
-module github.com/VBuligan/standart-web-server
+module github.com/VBuligan/server-and-db
 
 go 1.20
 

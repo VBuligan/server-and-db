@@ -3,7 +3,7 @@ package main
 import (
 	"flag"
 	"github.com/BurntSushi/toml"
-	"github.com/VBuligan/standart-web-server/internal/app/api"
+	"github.com/VBuligan/server-and-db/internal/app/api"
 	"log"
 )
 
