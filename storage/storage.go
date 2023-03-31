@@ -1,6 +1,9 @@
 package storage
 
-import "database/sql"
+import (
+	"database/sql"
+	"log"
+)
 
 // Storage * Instance of storage
 type Storage struct {
@@ -26,6 +29,7 @@ func (storage *Storage) Open() error {
 		return err
 	}
 	storage.db = db
+	log.Println("Database connection created successfully!")
 	return nil
 }
 
