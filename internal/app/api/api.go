@@ -1,6 +1,7 @@
 package api
 
 import (
+	"github.com/VBuligan/server-and-db/storage"
 	"github.com/gorilla/mux"
 	"github.com/sirupsen/logrus"
 	"net/http"
@@ -12,6 +13,8 @@ type API struct {
 	config *Config
 	logger *logrus.Logger
 	router *mux.Router
+	// * Добавление поля для работы с хранилищем
+	storage *storage.Storage
 }
 
 // New * API constructor: build base API instance
@@ -35,6 +38,11 @@ func (api *API) Start() error {
 
 	// * Trying to configure Router
 	api.configureRouterField()
+
+	// * Trying to configure Storage
+	if err := api.configureStorageField(); err != nil {
+		return err
+	}
 
 	// * Trying to start Http-serv
 	return http.ListenAndServe(api.config.BindAddr, api.router)
