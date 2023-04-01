@@ -1,6 +1,6 @@
 package models
 
-// * model definition
+// Article * model definition
 type Article struct {
 	ID      int    `json:"id"`
 	Title   string `json:"title"`
