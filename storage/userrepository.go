@@ -52,6 +52,7 @@ func (ur *UserRepository) SelectAll() ([]*models.User, error) {
 			log.Println(err)
 			continue
 		}
+		users = append(users, &u)
 	}
-	return nil, nil
+	return users, nil
 }
