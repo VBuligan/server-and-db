@@ -24,14 +24,22 @@ func (ur *UserRepository) Create(u *models.User) (*models.User, error) {
 	return u, nil
 }
 
-/*
-
-
- */
-
 // FindByLogin * Find user by login
 func (ur *UserRepository) FindByLogin(login string) (*models.User, bool, error) {
-	return nil, false, nil
+	users, err := ur.SelectAll()
+	var founded bool
+	if err != nil {
+		return nil, founded, err
+	}
+	var userFinded *models.User
+	for _, u := range users {
+		if u.Login == login {
+			userFinded = u
+			founded = true
+			break
+		}
+	}
+	return userFinded, founded, nil
 }
 
 // SelectAll * Select all users
