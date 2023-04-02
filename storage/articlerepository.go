@@ -24,8 +24,18 @@ func (ar *ArticleRepository) Create(a *models.Article) (*models.Article, error) 
 }
 
 func (ar *ArticleRepository) DeleteById(id int) (*models.Article, error) {
-
-	return nil, nil
+	article, ok, err := ar.FindArticleById(id)
+	if err != nil {
+		return nil, err
+	}
+	if ok {
+		query := fmt.Sprintf("DELETE FROM %s WHERE id=$1", tableArticle)
+		_, err := ar.storage.db.Exec(query, id)
+		if err != nil {
+			return nil, err
+		}
+	}
+	return article, nil
 }
 
 func (ar *ArticleRepository) FindArticleById(id int) (*models.Article, bool, error) {
