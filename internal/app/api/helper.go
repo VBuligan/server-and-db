@@ -3,7 +3,10 @@ package api
 import (
 	"github.com/VBuligan/server-and-db/storage"
 	"github.com/sirupsen/logrus"
-	"net/http"
+)
+
+var (
+	prefix string = "/api/v1"
 )
 
 // * Конфигурируем api instance, поле Logger
@@ -18,9 +21,11 @@ func (api *API) configureLoggerField() error {
 
 // * Конфигурируем маршрутизатор, поле router api
 func (api *API) configureRouterField() {
-	api.router.HandleFunc("/", func(writer http.ResponseWriter, request *http.Request) {
-		writer.Write([]byte("Hi! This is REST API"))
-	})
+	api.router.HandleFunc(prefix+"/articles", a.GetAllArticles).Methods("GET")
+	api.router.HandleFunc(prefix+"/articles/{id}", a.GetArticleById).Methods("GET")
+	api.router.HandleFunc(prefix+"/articles/{id}", a.DeleteArticleById).Methods("DELETE")
+	api.router.HandleFunc(prefix+"/articles", a.PostArticle).Methods("POST")
+	api.router.HandleFunc(prefix+"/user/register", a.PostUserRegister).Methods("POST")
 }
 
 // * Конфигурируем хранилище storage
