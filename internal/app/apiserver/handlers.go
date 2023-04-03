@@ -3,7 +3,9 @@ package apiserver
 import (
 	"encoding/json"
 	"github.com/VBuligan/server-and-db/internal/app/models"
+	"github.com/gorilla/mux"
 	"net/http"
+	"strconv"
 )
 
 type Message struct {
@@ -30,18 +32,18 @@ func (api *APIServer) GetAllArticles(writer http.ResponseWriter, req *http.Reque
 		json.NewEncoder(writer).Encode(msg)
 		return
 	}
-	api.logger.Info("Get All Articles GET /articles")
+	api.logger.Info("Get All Articles GET /api/v1/articles")
 	writer.WriteHeader(http.StatusOK)
 	json.NewEncoder(writer).Encode(articles)
 }
 
 func (api *APIServer) PostArticle(writer http.ResponseWriter, req *http.Request) {
 	initHeaders(writer)
-	api.logger.Info("Post Article POST /articles")
+	api.logger.Info("Post Article POST /api/v1/articles")
 	var article models.Article
 	err := json.NewDecoder(req.Body).Decode(&article)
 	if err != nil {
-		api.logger.Info("Invalid json recieved from client")
+		api.logger.Info("Invalid json received from client")
 		msg := Message{
 			StatusCode: 400,
 			Message:    "Provided json is invalid",
@@ -66,11 +68,23 @@ func (api *APIServer) PostArticle(writer http.ResponseWriter, req *http.Request)
 	}
 	writer.WriteHeader(201)
 	json.NewEncoder(writer).Encode(a)
-
 }
 
 func (api *APIServer) GetArticleById(writer http.ResponseWriter, req *http.Request) {
-
+	initHeaders(writer)
+	api.logger.Info("Get Articles by ID /api/v1/articles/{id}")
+	id, err := strconv.Atoi(mux.Vars(req)["id"])
+	if err != nil {
+		api.logger.Info("Troubles while parsing Id param")
+		msg := Message{
+			StatusCode: 400,
+			Message:    "Unappropriated id value",
+			IsError:    true,
+		}
+		writer.WriteHeader(400)
+		json.NewEncoder(writer).Encode(msg)
+		return
+	}
 }
 
 func (api *APIServer) DeleteArticleById(writer http.ResponseWriter, req *http.Request) {
@@ -78,5 +92,5 @@ func (api *APIServer) DeleteArticleById(writer http.ResponseWriter, req *http.Re
 }
 
 func (api *APIServer) PostUserRegister(writer http.ResponseWriter, req *http.Request) {
-	
+
 }
