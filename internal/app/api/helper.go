@@ -21,11 +21,11 @@ func (api *API) configureLoggerField() error {
 
 // * Конфигурируем маршрутизатор, поле router api
 func (api *API) configureRouterField() {
-	api.router.HandleFunc(prefix+"/articles", a.GetAllArticles).Methods("GET")
-	api.router.HandleFunc(prefix+"/articles/{id}", a.GetArticleById).Methods("GET")
-	api.router.HandleFunc(prefix+"/articles/{id}", a.DeleteArticleById).Methods("DELETE")
-	api.router.HandleFunc(prefix+"/articles", a.PostArticle).Methods("POST")
-	api.router.HandleFunc(prefix+"/user/register", a.PostUserRegister).Methods("POST")
+	api.router.HandleFunc(prefix+"/articles", api.GetAllArticles).Methods("GET")
+	api.router.HandleFunc(prefix+"/articles/{id}", api.GetArticleById).Methods("GET")
+	api.router.HandleFunc(prefix+"/articles/{id}", api.DeleteArticleById).Methods("DELETE")
+	api.router.HandleFunc(prefix+"/articles", api.PostArticle).Methods("POST")
+	api.router.HandleFunc(prefix+"/user/register", api.PostUserRegister).Methods("POST")
 }
 
 // * Конфигурируем хранилище storage
