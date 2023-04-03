@@ -85,6 +85,33 @@ func (api *APIServer) GetArticleById(writer http.ResponseWriter, req *http.Reque
 		json.NewEncoder(writer).Encode(msg)
 		return
 	}
+	article, ok, err := api.store.Article().FindArticleById(id)
+	if err != nil {
+		api.logger.Info("Toubles while accessing table articles")
+		msg := Message{
+			StatusCode: 500,
+			Message:    "We have some troubles with accessing table",
+			IsError:    true,
+		}
+		writer.WriteHeader(500)
+		json.NewEncoder(writer).Encode(msg)
+		return
+	}
+	if !ok {
+		api.logger.Info("Can not find article with that ID in database")
+		msg := Message{
+			StatusCode: 404,
+			Message:    "Article with that ID does not exist",
+			IsError:    true,
+		}
+
+		writer.WriteHeader(404)
+		json.NewEncoder(writer).Encode(msg)
+		return
+	}
+	writer.WriteHeader(200)
+	json.NewEncoder(writer).Encode(article)
+
 }
 
 func (api *APIServer) DeleteArticleById(writer http.ResponseWriter, req *http.Request) {
