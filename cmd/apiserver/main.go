@@ -5,7 +5,7 @@ import (
 	"log"
 
 	"github.com/BurntSushi/toml"
-	"github.com/vlasove/8.HandlerImpl2/internal/app/apiserver"
+	"github.com/VBuligan/server-and-db/internal/app/apiserver"
 )
 
 var (
