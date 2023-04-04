@@ -246,7 +246,7 @@ func (api *APIServer) PostUserRegister(writer http.ResponseWriter, req *http.Req
 }
 
 func (api *APIServer) PostToAuth(writer http.ResponseWriter, req *http.Request) {
-	initHeaders()
+	initHeaders(writer)
 	api.logger.Info("Post to Auth POST /api/v1/user/auth")
 	var user models.User
 	err := json.NewEncoder(req.Body).Decode(&user)
@@ -272,6 +272,30 @@ func (api *APIServer) PostToAuth(writer http.ResponseWriter, req *http.Request) 
 			IsError:    true,
 		}
 		writer.WriteHeader(500)
+		json.NewEncoder(writer).Encode(msg)
+		return
+	}
+	// * Если подключение удалось , но пользователя с таким логином нет
+	if !ok {
+		api.logger.Info("User with that login does not exists")
+		msg := Message{
+			StatusCode: 400,
+			Message:    "User with that login does not exists in database. Try register first",
+			IsError:    true,
+		}
+		writer.WriteHeader(400)
+		json.NewEncoder(writer).Encode(msg)
+		return
+	}
+	// * Если пользователь с таким логином ест ьв бд - проверим, что у него пароль совпадает с фактическим
+	if userInDB.Password != userFromJson.Password {
+		api.logger.Info("Invalid credetials to auth")
+		msg := Message{
+			StatusCode: 404,
+			Message:    "Your password is invalid",
+			IsError:    true,
+		}
+		writer.WriteHeader(404)
 		json.NewEncoder(writer).Encode(msg)
 		return
 	}
