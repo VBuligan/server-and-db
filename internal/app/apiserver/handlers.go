@@ -249,5 +249,30 @@ func (api *APIServer) PostToAuth(writer http.ResponseWriter, req *http.Request) 
 	initHeaders()
 	api.logger.Info("Post to Auth POST /api/v1/user/auth")
 	var user models.User
-
+	err := json.NewEncoder(req.Body).Decode(&user)
+	// * Обрабатываем сучай если json не json
+	if err != nil {
+		api.logger.Info("Invalid json recieved from client")
+		msg := Message{
+			StatusCode: 400,
+			Message:    "Provided json is invalid",
+			IsError:    true,
+		}
+		writer.WriteHeader(400)
+		json.NewEncoder(writer).Encode(msg)
+		return
+	}
+	// * Пытаемся обнаружить пользователя с таким login в bd
+	userInDb, ok, err := api.store.User().FindByLogin(userFormJson.Login)
+	if err != nil {
+		api.logger.Info("Can not make user search in database:", err)
+		msg := Message{
+			StatusCode: 500,
+			Message:    "We have some troubles while accessing database",
+			IsError:    true,
+		}
+		writer.WriteHeader(500)
+		json.NewEncoder(writer).Encode(msg)
+		return
+	}
 }
