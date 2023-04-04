@@ -244,3 +244,10 @@ func (api *APIServer) PostUserRegister(writer http.ResponseWriter, req *http.Req
 	json.NewEncoder(writer).Encode(msg)
 
 }
+
+func (api *APIServer) PostToAuth(writer http.ResponseWriter, req *http.Request) {
+	initHeaders()
+	api.logger.Info("Post to Auth POST /api/v1/user/auth")
+	var user models.User
+
+}

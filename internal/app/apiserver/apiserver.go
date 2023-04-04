@@ -61,6 +61,8 @@ func (s *APIServer) configureRouter() {
 	s.router.HandleFunc(prefix+"/articles"+"/{id}", s.DeleteArticleById).Methods("DELETE")
 	s.router.HandleFunc(prefix+"/articles", s.PostArticle).Methods("POST")
 	s.router.HandleFunc(prefix+"/user/register", s.PostUserRegister).Methods("POST")
+	// * New pair for auth
+	s.router.HandleFunc(prefix+"user/auth", s.PostToAuth).Methods("POST")
 }
 
 // configureStore method
