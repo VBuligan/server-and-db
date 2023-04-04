@@ -1,6 +1,7 @@
 package apiserver
 
 import (
+	"github.com/VBuligan/server-and-db/internal/app/middleware"
 	"net/http"
 
 	"github.com/VBuligan/server-and-db/store"
@@ -57,7 +58,14 @@ func (s *APIServer) configureLogger() error {
 // func for configure Router
 func (s *APIServer) configureRouter() {
 	s.router.HandleFunc(prefix+"/articles", s.GetAllArticles).Methods("GET")
-	s.router.HandleFunc(prefix+"/articles"+"/{id}", s.GetArticleById).Methods("GET")
+	//Было до JWT
+	//s.router.HandleFunc(prefix+"/articles"+"/{id}", s.GetArticleById).Methods("GET")
+	// * Теперь требует наличия JWT ******************
+	s.router.Handle(prefix+"/articles"+"/{id}", middleware.JwtMiddleware.Handler(
+		http.HandlerFunc(s.GetArticleById),
+	)).Methods("GET")
+	// ************************************************
+
 	s.router.HandleFunc(prefix+"/articles"+"/{id}", s.DeleteArticleById).Methods("DELETE")
 	s.router.HandleFunc(prefix+"/articles", s.PostArticle).Methods("POST")
 	s.router.HandleFunc(prefix+"/user/register", s.PostUserRegister).Methods("POST")
