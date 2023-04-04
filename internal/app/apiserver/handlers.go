@@ -268,7 +268,7 @@ func (api *APIServer) PostToAuth(writer http.ResponseWriter, req *http.Request) 
 	}
 
 	// * Пытаемся обнаружить пользователя с таким login в bd
-	userInDb, ok, err := api.store.User().FindByLogin(userFormJson.Login)
+	userInDB, ok, err := api.store.User().FindByLogin(userFromJson.Login)
 	if err != nil {
 		api.logger.Info("Can not make user search in database:", err)
 		msg := Message{
@@ -313,7 +313,8 @@ func (api *APIServer) PostToAuth(writer http.ResponseWriter, req *http.Request) 
 	claims["admin"] = true
 	claims["name"] = userInDB.Login
 	tokenString, err := token.SignedString(middleware.SecretKey)
-	//В случае, если токен выбить не удалось!
+
+	// * В случае, если токен выбить не удалось!
 	if err != nil {
 		api.logger.Info("Can not claim jwt-token")
 		msg := Message{
