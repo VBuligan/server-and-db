@@ -43,7 +43,7 @@ func (s *APIServer) Start() error {
 	return http.ListenAndServe(s.config.BindAddr, s.router)
 }
 
-// func for configureate logger, should be unexported
+// func for configure logger, should be unexported
 func (s *APIServer) configureLogger() error {
 	level, err := logrus.ParseLevel(s.config.LogLevel)
 	if err != nil {
@@ -62,7 +62,7 @@ func (s *APIServer) configureRouter() {
 	s.router.HandleFunc(prefix+"/articles", s.PostArticle).Methods("POST")
 	s.router.HandleFunc(prefix+"/user/register", s.PostUserRegister).Methods("POST")
 	// * New pair for auth
-	s.router.HandleFunc(prefix+"user/auth", s.PostToAuth).Methods("POST")
+	s.router.HandleFunc(prefix+"/user/auth", s.PostToAuth).Methods("POST")
 }
 
 // configureStore method
